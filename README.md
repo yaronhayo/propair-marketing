@@ -1,13 +1,13 @@
 # ProPair Marketing Site
 
-Static marketing website for [mypropair.com](https://www.mypropair.com). Built with Astro, hosted on Hostinger.
+Static marketing website for [mypropair.com](https://www.mypropair.com). Built with Astro, deployed to Cloudflare Pages.
 
 ## Architecture
 
 This is a **standalone static site** — completely independent from the ProPair app infrastructure (Firebase, Cloud Functions, Cloud Run). The only integration point is the early access signup form, which writes leads directly to the production Firestore `earlyAccessLeads` collection using the Firebase JS SDK.
 
 ```
-mypropair.com (Hostinger)
+mypropair.com (Cloudflare Pages)
   └── Static HTML/CSS/JS (Astro build output)
         └── Early Access Form → Firebase JS SDK → propair-prod Firestore
 ```
@@ -40,24 +40,17 @@ npm run preview
 
 1. Push to `main` branch
 2. GitHub Actions builds the Astro site with production Firebase config
-3. Build output is pushed to the `build` branch
-4. Hostinger's Git auto-deployment pulls from `build` into `public_html`
-5. Site is live at mypropair.com
+3. Wrangler deploys the `dist/` output to Cloudflare Pages
+4. Site is live at mypropair.com (global CDN, automatic HTTPS)
 
-### Hostinger Setup (one-time)
+### Cloudflare Pages Setup (one-time)
 
-1. Log into [hPanel](https://hpanel.hostinger.com)
-2. Go to **Websites** → **mypropair.com** → **Git** (under Advanced)
-3. Add repository:
-   - **Repository URL**: `https://github.com/yaronhayo/propair-marketing.git`
-   - **Branch**: `build`
-   - **Install Path**: leave empty (deploys to `/public_html`)
-4. Click **Auto Deployment** and copy the Webhook URL
-5. In GitHub repo → **Settings** → **Webhooks** → **Add webhook**:
-   - **Payload URL**: paste the Hostinger webhook URL
-   - **Content type**: `application/json`
-   - **Events**: Just the push event
-6. Done — every push to `main` auto-deploys
+1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com) → **Workers & Pages** → **Create** → **Pages** → **Direct Upload**
+2. Project name: `propair-marketing`
+3. Upload any placeholder file to create the project (GitHub Actions will handle real deploys)
+4. Go to the project → **Custom Domains** → add `mypropair.com` and `www.mypropair.com`
+   - Since the domain is already on Cloudflare DNS, records are configured automatically
+5. Done — every push to `main` auto-builds and deploys
 
 ### GitHub Secrets (one-time)
 
@@ -65,6 +58,8 @@ Go to GitHub repo → **Settings** → **Secrets and variables** → **Actions**
 
 | Secret | Value |
 |--------|-------|
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare dashboard → any page → right sidebar → Account ID |
+| `CLOUDFLARE_API_TOKEN` | Cloudflare dashboard → My Profile → API Tokens → Create Token → "Edit Cloudflare Workers" template → include Pages permission |
 | `PUBLIC_FIREBASE_API_KEY` | Firebase web API key from propair-prod |
 | `PUBLIC_FIREBASE_AUTH_DOMAIN` | `propair-prod.firebaseapp.com` |
 | `PUBLIC_FIREBASE_PROJECT_ID` | `propair-prod` |
@@ -73,13 +68,9 @@ Go to GitHub repo → **Settings** → **Secrets and variables** → **Actions**
 | `PUBLIC_FIREBASE_APP_ID` | Firebase web app ID from propair-prod |
 | `PUBLIC_FIREBASE_MEASUREMENT_ID` | GA measurement ID |
 
-### DNS (already configured)
+### DNS
 
-| Type | Name | Value |
-|------|------|-------|
-| A | @ | 199.36.158.100 |
-| A | @ | 199.36.158.101 |
-| CNAME | www | mypropair.com |
+DNS is managed via Cloudflare. When you add custom domains to the Cloudflare Pages project, the required CNAME records are created automatically.
 
 ## Project Structure
 

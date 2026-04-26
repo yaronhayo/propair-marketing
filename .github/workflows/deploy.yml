@@ -1,10 +1,12 @@
-# ProPair Marketing Site — Build & Deploy to Hostinger
+# ProPair Marketing Site — Build & Deploy to Cloudflare Pages
 #
-# On push to main: builds the Astro site and pushes the dist/ output
-# to the `build` branch. Hostinger's Git auto-deployment pulls from
-# that branch into public_html.
+# On push to main: builds the Astro site and deploys to Cloudflare Pages.
+# Cloudflare Pages serves the site at mypropair.com and www.mypropair.com
+# with automatic HTTPS via Cloudflare's global CDN.
 #
 # Required GitHub Secrets:
+#   CLOUDFLARE_ACCOUNT_ID             — Cloudflare account ID
+#   CLOUDFLARE_API_TOKEN              — API token with Pages:Edit permission
 #   PUBLIC_FIREBASE_API_KEY           — Firebase client API key (propair-prod)
 #   PUBLIC_FIREBASE_AUTH_DOMAIN       — propair-prod.firebaseapp.com
 #   PUBLIC_FIREBASE_PROJECT_ID        — propair-prod
@@ -13,12 +15,11 @@
 #   PUBLIC_FIREBASE_APP_ID            — Firebase web app ID
 #   PUBLIC_FIREBASE_MEASUREMENT_ID    — GA measurement ID
 #
-# Hostinger Setup:
-#   1. hPanel → Websites → mypropair.com → Git
-#   2. Repository: https://github.com/yaronhayo/propair-marketing.git
-#   3. Branch: build
-#   4. Enable Auto Deployment
-#   5. Copy the Webhook URL → add as GitHub webhook (push events)
+# Cloudflare Pages Setup:
+#   1. dash.cloudflare.com → Workers & Pages → Create → Pages → Direct Upload
+#   2. Project name: propair-marketing
+#   3. After first deploy, go to Custom Domains → add mypropair.com and www.mypropair.com
+#   4. DNS records are auto-configured since domain is already on Cloudflare
 
 name: Build & Deploy
 
@@ -28,7 +29,7 @@ on:
 
 jobs:
   build-and-deploy:
-    name: Build & Push to Hostinger
+    name: Build & Deploy to Cloudflare Pages
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -56,11 +57,9 @@ jobs:
       - name: Build
         run: npx astro build
 
-      - name: Push build to deploy branch
-        uses: s0/git-publish-subdir-action@develop
-        env:
-          REPO: self
-          BRANCH: build
-          FOLDER: dist
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MESSAGE: "Build: ({sha}) {msg}"
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=propair-marketing
