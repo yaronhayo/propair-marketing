@@ -1,0 +1,72 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'ProPair connects home-service companies with independent field technicians. Automated dispatch, real-time settlement, portable reputation.' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.mypropair.com" />
+    <meta property="og:image" content="https://www.mypropair.com/propair-og-card.png" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="https://www.mypropair.com/propair-og-card.png" />
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://mypropair.com" />
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "ProPair",
+        "url": "https://mypropair.com",
+        "logo": "https://www.mypropair.com/propair-og-card.png",
+        "description": "ProPair connects home-service companies with independent field technicians. Automated dispatch, real-time settlement, portable reputation.",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "email": "hello@mypropair.com",
+          "contactType": "customer support"
+        },
+        "sameAs": []
+      }
+    </script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --brand: #1E3A5F;
+    --brand-light: #2563eb;
+    --accent: #10b981;
+    --surface: #ffffff;
+    --text: #1a1a2e;
+    --text-muted: #64748b;
+    --bg: #f8fafc;
+    --radius: 12px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+  }
+  a { color: inherit; text-decoration: none; }
+</style>

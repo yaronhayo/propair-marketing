@@ -1,0 +1,541 @@
+---
+/**
+ * EarlyAccessForm — Marketing site lead capture form.
+ *
+ * Writes directly to Firestore `earlyAccessLeads` collection.
+ * No Firebase Auth — unauthenticated client write.
+ * Captures UTM params from URL query string.
+ * Checks for duplicate emails before writing.
+ */
+---
+
+<section id="early-access" class="early-access-section">
+  <div class="container ea-inner">
+    <h2 class="ea-title">Get Early Access</h2>
+    <p class="ea-sub">
+      Join the waitlist and be among the first to experience ProPair.
+      We'll send you an invite link when your spot opens up.
+    </p>
+
+    <!-- Success State -->
+    <div id="ea-success" class="ea-success" style="display:none;">
+      <div class="ea-success-icon">🎉</div>
+      <h3>You're on the list!</h3>
+      <p>We'll send your invite link to <span id="ea-success-email"></span> when your spot opens up.</p>
+    </div>
+
+    <!-- Duplicate State -->
+    <div id="ea-duplicate" class="ea-duplicate" style="display:none;">
+      <div class="ea-duplicate-icon">📬</div>
+      <h3>You're already on the list!</h3>
+      <p>We already have <span id="ea-duplicate-email"></span> registered. Keep an eye on your inbox for your invite.</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="ea-error" class="ea-error" style="display:none;">
+      <div class="ea-error-icon">⚠️</div>
+      <h3>Something went wrong</h3>
+      <p id="ea-error-message">Please try again in a moment.</p>
+      <button id="ea-retry-btn" class="btn btn-outline" type="button">Try Again</button>
+    </div>
+
+    <!-- Form -->
+    <form id="ea-form" class="ea-form" novalidate>
+      <div class="ea-field">
+        <label for="ea-fullName">Full Name <span class="required">*</span></label>
+        <input
+          type="text"
+          id="ea-fullName"
+          name="fullName"
+          placeholder="Jane Smith"
+          required
+          minlength="2"
+          maxlength="100"
+          autocomplete="name"
+        />
+        <span class="ea-field-error" id="ea-fullName-error"></span>
+      </div>
+
+      <div class="ea-field">
+        <label for="ea-email">Email <span class="required">*</span></label>
+        <input
+          type="email"
+          id="ea-email"
+          name="email"
+          placeholder="jane@example.com"
+          required
+          autocomplete="email"
+        />
+        <span class="ea-field-error" id="ea-email-error"></span>
+      </div>
+
+      <div class="ea-field">
+        <label for="ea-phone">Phone <span class="optional">(optional)</span></label>
+        <input
+          type="tel"
+          id="ea-phone"
+          name="phone"
+          placeholder="+1 555 123 4567"
+          autocomplete="tel"
+        />
+        <span class="ea-field-error" id="ea-phone-error"></span>
+      </div>
+
+      <div class="ea-field">
+        <label>I'm interested as… <span class="required">*</span></label>
+        <div class="ea-radio-group">
+          <label class="ea-radio">
+            <input type="radio" name="roleInterest" value="TECH" />
+            <span class="ea-radio-label">🔧 Field Technician</span>
+          </label>
+          <label class="ea-radio">
+            <input type="radio" name="roleInterest" value="DISPATCHER" />
+            <span class="ea-radio-label">🏢 Company / Dispatcher</span>
+          </label>
+          <label class="ea-radio">
+            <input type="radio" name="roleInterest" value="BOTH" />
+            <span class="ea-radio-label">🤝 Both</span>
+          </label>
+        </div>
+        <span class="ea-field-error" id="ea-roleInterest-error"></span>
+      </div>
+
+      <div class="ea-field" id="ea-companyName-field" style="display:none;">
+        <label for="ea-companyName">Company Name <span class="required">*</span></label>
+        <input
+          type="text"
+          id="ea-companyName"
+          name="companyName"
+          placeholder="Acme Home Services"
+          minlength="2"
+          maxlength="100"
+          autocomplete="organization"
+        />
+        <span class="ea-field-error" id="ea-companyName-error"></span>
+      </div>
+
+      <button type="submit" id="ea-submit-btn" class="btn btn-primary btn-lg ea-submit">
+        <span id="ea-submit-text">Join the Waitlist</span>
+        <span id="ea-submit-spinner" class="ea-spinner" style="display:none;"></span>
+      </button>
+
+      <p class="ea-privacy">
+        We respect your privacy. No spam, ever. Read our <a href="/privacy">Privacy Policy</a>.
+      </p>
+    </form>
+  </div>
+</section>
+
+<style>
+  .early-access-section {
+    padding: 80px 0;
+    background: white;
+  }
+  .ea-inner {
+    max-width: 560px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .ea-title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .ea-sub {
+    color: var(--text-muted);
+    margin-bottom: 36px;
+    font-size: 1.05rem;
+  }
+
+  /* Form */
+  .ea-form {
+    text-align: left;
+  }
+  .ea-field {
+    margin-bottom: 20px;
+  }
+  .ea-field label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  .required { color: #ef4444; }
+  .optional { color: var(--text-muted); font-weight: 400; }
+
+  .ea-field input[type="text"],
+  .ea-field input[type="email"],
+  .ea-field input[type="tel"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s;
+    background: white;
+    color: var(--text);
+  }
+  .ea-field input:focus {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
+  }
+  .ea-field input.invalid {
+    border-color: #ef4444;
+  }
+  .ea-field input.invalid:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  }
+
+  .ea-field-error {
+    display: block;
+    color: #ef4444;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    min-height: 1.2em;
+  }
+
+  /* Radio Group */
+  .ea-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .ea-radio {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 400;
+  }
+  .ea-radio:hover {
+    border-color: var(--brand);
+    background: rgba(30, 58, 95, 0.02);
+  }
+  .ea-radio input[type="radio"] {
+    accent-color: var(--brand);
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+  .ea-radio input[type="radio"]:checked + .ea-radio-label {
+    font-weight: 600;
+  }
+  .ea-radio:has(input:checked) {
+    border-color: var(--brand);
+    background: rgba(30, 58, 95, 0.04);
+  }
+  .ea-radio-label {
+    font-size: 0.95rem;
+  }
+
+  /* Submit */
+  .ea-submit {
+    width: 100%;
+    text-align: center;
+    margin-top: 8px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .ea-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  .ea-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: ea-spin 0.6s linear infinite;
+  }
+  @keyframes ea-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .ea-privacy {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 16px;
+  }
+  .ea-privacy a {
+    color: var(--brand);
+    text-decoration: underline;
+  }
+
+  /* Success State */
+  .ea-success {
+    background: #f0fdf4;
+    border: 2px solid #86efac;
+    border-radius: 12px;
+    padding: 40px 32px;
+    text-align: center;
+  }
+  .ea-success-icon { font-size: 3rem; margin-bottom: 12px; }
+  .ea-success h3 { font-size: 1.4rem; margin-bottom: 8px; color: #166534; }
+  .ea-success p { color: #15803d; font-size: 0.95rem; }
+
+  /* Duplicate State */
+  .ea-duplicate {
+    background: #eff6ff;
+    border: 2px solid #93c5fd;
+    border-radius: 12px;
+    padding: 40px 32px;
+    text-align: center;
+  }
+  .ea-duplicate-icon { font-size: 3rem; margin-bottom: 12px; }
+  .ea-duplicate h3 { font-size: 1.4rem; margin-bottom: 8px; color: #1e40af; }
+  .ea-duplicate p { color: #1d4ed8; font-size: 0.95rem; }
+
+  /* Error State */
+  .ea-error {
+    background: #fef2f2;
+    border: 2px solid #fca5a5;
+    border-radius: 12px;
+    padding: 40px 32px;
+    text-align: center;
+  }
+  .ea-error-icon { font-size: 3rem; margin-bottom: 12px; }
+  .ea-error h3 { font-size: 1.4rem; margin-bottom: 8px; color: #991b1b; }
+  .ea-error p { color: #b91c1c; font-size: 0.95rem; margin-bottom: 16px; }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .ea-inner { padding: 0 16px; }
+    .ea-title { font-size: 1.6rem; }
+  }
+</style>
+
+<script>
+  // Firebase JS SDK — client-side Firestore writes for early access leads
+  import { initializeApp } from 'firebase/app';
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    query,
+    where,
+    getDocs,
+    Timestamp,
+  } from 'firebase/firestore';
+
+  // Firebase config — loaded from environment variables.
+  // The marketing site always writes to propair-prod Firestore.
+  // These are client-side Firebase keys (safe in browser JS).
+  const firebaseConfig = {
+    apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
+    authDomain: import.meta.env.PUBLIC_FIREBASE_AUTH_DOMAIN,
+    projectId: import.meta.env.PUBLIC_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.PUBLIC_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.PUBLIC_FIREBASE_APP_ID,
+    measurementId: import.meta.env.PUBLIC_FIREBASE_MEASUREMENT_ID,
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // ── DOM References ──────────────────────────────────────────
+  const form = document.getElementById('ea-form') as HTMLFormElement;
+  const successEl = document.getElementById('ea-success')!;
+  const duplicateEl = document.getElementById('ea-duplicate')!;
+  const errorEl = document.getElementById('ea-error')!;
+  const successEmailEl = document.getElementById('ea-success-email')!;
+  const duplicateEmailEl = document.getElementById('ea-duplicate-email')!;
+  const errorMessageEl = document.getElementById('ea-error-message')!;
+  const retryBtn = document.getElementById('ea-retry-btn')!;
+  const submitBtn = document.getElementById('ea-submit-btn') as HTMLButtonElement;
+  const submitText = document.getElementById('ea-submit-text')!;
+  const submitSpinner = document.getElementById('ea-submit-spinner')!;
+  const companyField = document.getElementById('ea-companyName-field')!;
+
+  // ── UTM Params ──────────────────────────────────────────────
+  function getUtmParams(): Record<string, string | null> {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      utmSource: params.get('utm_source'),
+      utmMedium: params.get('utm_medium'),
+      utmCampaign: params.get('utm_campaign'),
+    };
+  }
+
+  // ── Validation ──────────────────────────────────────────────
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function clearErrors() {
+    form.querySelectorAll('.ea-field-error').forEach((el) => {
+      (el as HTMLElement).textContent = '';
+    });
+    form.querySelectorAll('input.invalid').forEach((el) => {
+      el.classList.remove('invalid');
+    });
+  }
+
+  function setFieldError(fieldId: string, message: string) {
+    const errorEl = document.getElementById(`ea-${fieldId}-error`);
+    const inputEl = document.getElementById(`ea-${fieldId}`);
+    if (errorEl) errorEl.textContent = message;
+    if (inputEl) inputEl.classList.add('invalid');
+  }
+
+  function validateForm(): boolean {
+    clearErrors();
+    let valid = true;
+
+    // Full Name: 2-100 chars
+    const fullName = (document.getElementById('ea-fullName') as HTMLInputElement).value.trim();
+    if (!fullName || fullName.length < 2) {
+      setFieldError('fullName', 'Name must be at least 2 characters.');
+      valid = false;
+    } else if (fullName.length > 100) {
+      setFieldError('fullName', 'Name must be 100 characters or fewer.');
+      valid = false;
+    }
+
+    // Email: valid format
+    const email = (document.getElementById('ea-email') as HTMLInputElement).value.trim();
+    if (!email) {
+      setFieldError('email', 'Email is required.');
+      valid = false;
+    } else if (!EMAIL_RE.test(email)) {
+      setFieldError('email', 'Please enter a valid email address.');
+      valid = false;
+    }
+
+    // Role Interest: required
+    const roleInterest = (form.querySelector('input[name="roleInterest"]:checked') as HTMLInputElement | null)?.value;
+    if (!roleInterest) {
+      setFieldError('roleInterest', 'Please select a role.');
+      valid = false;
+    }
+
+    // Company Name: required when Dispatcher or Both
+    if (roleInterest === 'DISPATCHER' || roleInterest === 'BOTH') {
+      const companyName = (document.getElementById('ea-companyName') as HTMLInputElement).value.trim();
+      if (!companyName || companyName.length < 2) {
+        setFieldError('companyName', 'Company name must be at least 2 characters.');
+        valid = false;
+      } else if (companyName.length > 100) {
+        setFieldError('companyName', 'Company name must be 100 characters or fewer.');
+        valid = false;
+      }
+    }
+
+    return valid;
+  }
+
+  // ── Show/Hide Company Name Field ───────────────────────────
+  form.querySelectorAll('input[name="roleInterest"]').forEach((radio) => {
+    radio.addEventListener('change', (e) => {
+      const value = (e.target as HTMLInputElement).value;
+      const show = value === 'DISPATCHER' || value === 'BOTH';
+      companyField.style.display = show ? 'block' : 'none';
+      if (!show) {
+        (document.getElementById('ea-companyName') as HTMLInputElement).value = '';
+        const err = document.getElementById('ea-companyName-error');
+        if (err) err.textContent = '';
+      }
+    });
+  });
+
+  // ── Duplicate Email Check ──────────────────────────────────
+  async function checkDuplicateEmail(email: string): Promise<boolean> {
+    const q = query(
+      collection(db, 'earlyAccessLeads'),
+      where('email', '==', email.toLowerCase())
+    );
+    const snapshot = await getDocs(q);
+    return !snapshot.empty;
+  }
+
+  // ── UI State Helpers ───────────────────────────────────────
+  function showState(state: 'form' | 'success' | 'duplicate' | 'error') {
+    form.style.display = state === 'form' ? 'block' : 'none';
+    successEl.style.display = state === 'success' ? 'block' : 'none';
+    duplicateEl.style.display = state === 'duplicate' ? 'block' : 'none';
+    errorEl.style.display = state === 'error' ? 'block' : 'none';
+  }
+
+  function setLoading(loading: boolean) {
+    submitBtn.disabled = loading;
+    submitText.style.display = loading ? 'none' : 'inline';
+    submitSpinner.style.display = loading ? 'inline-block' : 'none';
+  }
+
+  // ── Retry Button ───────────────────────────────────────────
+  retryBtn.addEventListener('click', () => {
+    showState('form');
+  });
+
+  // ── Form Submission ────────────────────────────────────────
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    setLoading(true);
+
+    const fullName = (document.getElementById('ea-fullName') as HTMLInputElement).value.trim();
+    const email = (document.getElementById('ea-email') as HTMLInputElement).value.trim().toLowerCase();
+    const phone = (document.getElementById('ea-phone') as HTMLInputElement).value.trim() || null;
+    const roleInterest = (form.querySelector('input[name="roleInterest"]:checked') as HTMLInputElement).value;
+    const companyName = (roleInterest === 'DISPATCHER' || roleInterest === 'BOTH')
+      ? (document.getElementById('ea-companyName') as HTMLInputElement).value.trim()
+      : null;
+    const utm = getUtmParams();
+
+    try {
+      // Check for duplicate email
+      const isDuplicate = await checkDuplicateEmail(email);
+      if (isDuplicate) {
+        duplicateEmailEl.textContent = email;
+        showState('duplicate');
+        setLoading(false);
+        return;
+      }
+
+      // Write to Firestore
+      await addDoc(collection(db, 'earlyAccessLeads'), {
+        fullName,
+        email,
+        phone,
+        roleInterest,
+        companyName,
+        serviceArea: null,
+        status: 'PENDING',
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+        activatedAt: null,
+        activatedBy: null,
+        onboardingLinkId: null,
+        source: 'marketing_site',
+        utmSource: utm.utmSource,
+        utmMedium: utm.utmMedium,
+        utmCampaign: utm.utmCampaign,
+        ipAddress: null,
+        notes: null,
+      });
+
+      successEmailEl.textContent = email;
+      showState('success');
+    } catch (err) {
+      console.error('Early access form error:', err);
+      errorMessageEl.textContent =
+        err instanceof Error ? err.message : 'Please try again in a moment.';
+      showState('error');
+    } finally {
+      setLoading(false);
+    }
+  });
+</script>

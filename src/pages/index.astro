@@ -1,0 +1,349 @@
+---
+import Layout from '../layouts/Layout.astro';
+import EarlyAccessForm from '../components/EarlyAccessForm.astro';
+---
+
+<Layout title="ProPair — The Home Services Marketplace">
+  <!-- Nav -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="logo">Pro<span>Pair</span></a>
+      <button class="hamburger" id="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+      <div class="nav-links" id="nav-links">
+        <a href="#how-it-works">How It Works</a>
+        <a href="#features">Features</a>
+        <a href="#for-who">Who It's For</a>
+        <a href="https://app.mypropair.com" class="btn btn-outline">Log In</a>
+        <a href="#early-access" class="btn btn-primary">Get Early Access</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="badge">Now in Early Access</div>
+      <h1>Stop dispatching jobs<br/>through WhatsApp groups</h1>
+      <p class="hero-sub">
+        ProPair replaces chaotic group chats with structured job routing,
+        GPS-verified closures, and automated settlement. Built for home-service
+        companies and independent field technicians.
+      </p>
+      <div class="hero-cta">
+        <a href="#early-access" class="btn btn-primary btn-lg">
+          Get Started Free
+        </a>
+        <a href="#how-it-works" class="btn btn-ghost btn-lg">
+          See How It Works →
+        </a>
+      </div>
+      <p class="hero-note">No credit card required. Free to browse and connect.</p>
+    </div>
+  </section>
+
+  <!-- Social Proof -->
+  <section class="social-proof">
+    <div class="container">
+      <div class="stats">
+        <div class="stat"><span class="stat-num">500+</span><span class="stat-label">Technicians</span></div>
+        <div class="stat"><span class="stat-num">120+</span><span class="stat-label">Companies</span></div>
+        <div class="stat"><span class="stat-num">$2M+</span><span class="stat-label">Jobs Settled</span></div>
+        <div class="stat"><span class="stat-num">4.8★</span><span class="stat-label">App Rating</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how-it-works" class="section">
+    <div class="container">
+      <h2 class="section-title">How ProPair Works</h2>
+      <p class="section-sub">Two ways to use ProPair — start social, go transactional when you're ready.</p>
+      <div class="two-tier">
+        <div class="tier-card">
+          <div class="tier-badge free">Free</div>
+          <h3>Connect & Network</h3>
+          <p>Build your professional network in the home services industry.</p>
+          <ul>
+            <li>✓ Create your professional profile</li>
+            <li>✓ Browse and match with companies or techs</li>
+            <li>✓ Chat and exchange contact info</li>
+            <li>✓ Build your reputation score</li>
+            <li>✓ Climb the leaderboard</li>
+          </ul>
+          <a href="#early-access" class="btn btn-outline btn-full">Join Free</a>
+        </div>
+        <div class="tier-card featured">
+          <div class="tier-badge pro">Verified</div>
+          <h3>Marketplace Access</h3>
+          <p>Unlock the full job marketplace with verified credentials.</p>
+          <ul>
+            <li>✓ Everything in Free, plus:</li>
+            <li>✓ Browse and claim nearby jobs</li>
+            <li>✓ Post jobs via SMS forwarding</li>
+            <li>✓ GPS-verified job closures</li>
+            <li>✓ Automated Stripe settlement</li>
+            <li>✓ Earnings wallet and ledger</li>
+            <li>✓ Masked phone calls (privacy)</li>
+          </ul>
+          <a href="#early-access" class="btn btn-primary btn-full">Get Verified</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">Built for the Field</h2>
+      <div class="features-grid">
+        <div class="feature">
+          <div class="feature-icon">📱</div>
+          <h3>SMS Job Ingestion</h3>
+          <p>Forward customer texts to your ProPair number. We parse them into structured jobs automatically.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">⚡</div>
+          <h3>FCFS Job Claiming</h3>
+          <p>Techs see nearby jobs in real-time. First to claim wins. No more "who wants this job?" in group chats.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📍</div>
+          <h3>GPS-Verified Closures</h3>
+          <p>Photo evidence with EXIF validation. No more disputes about whether the tech was actually on site.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">💰</div>
+          <h3>Automated Settlement</h3>
+          <p>Platform calculates splits, deducts fees, and pays techs via Stripe Connect. Weekly or on-demand.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔒</div>
+          <h3>Masked Phone Calls</h3>
+          <p>Techs call customers through masked numbers. Neither party sees the other's real phone number.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🏆</div>
+          <h3>Reputation Scoring</h3>
+          <p>Portable reputation that follows techs across companies. Points, streaks, ranks, and leaderboards.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- For Who -->
+  <section id="for-who" class="section">
+    <div class="container">
+      <h2 class="section-title">Who Is ProPair For?</h2>
+      <div class="audience-grid">
+        <div class="audience-card">
+          <h3>🏢 Home Service Companies</h3>
+          <p>Garage door, HVAC, plumbing, electrical — any company that dispatches field technicians to customer homes.</p>
+          <ul>
+            <li>Forward customer leads via SMS</li>
+            <li>Review and award jobs to the best tech</li>
+            <li>Track job progress in real-time</li>
+            <li>Automated financial settlement</li>
+          </ul>
+        </div>
+        <div class="audience-card">
+          <h3>🔧 Independent Technicians</h3>
+          <p>Skilled tradespeople who want more jobs, fair pay, and a portable reputation they own.</p>
+          <ul>
+            <li>Browse nearby jobs on your phone</li>
+            <li>Claim jobs instantly (first come, first served)</li>
+            <li>Get paid automatically via Stripe</li>
+            <li>Build a reputation that follows you</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Early Access Signup Form -->
+  <EarlyAccessForm />
+
+  <!-- App Badges -->
+  <section class="app-badges-section">
+    <div class="container" style="text-align:center; padding: 24px 0;">
+      <div class="app-badges">
+        <a href="https://apps.apple.com/app/propair/id000000000" class="app-badge" target="_blank" rel="noopener noreferrer" aria-label="Download on the App Store">
+          <svg viewBox="0 0 120 40" width="120" height="40" xmlns="http://www.w3.org/2000/svg">
+            <rect width="120" height="40" rx="6" fill="#000"/>
+            <text x="60" y="14" text-anchor="middle" fill="#fff" font-size="7" font-family="system-ui, sans-serif">Download on the</text>
+            <text x="60" y="28" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, sans-serif">App Store</text>
+          </svg>
+        </a>
+        <a href="https://play.google.com/store/apps/details?id=com.propair.app" class="app-badge" target="_blank" rel="noopener noreferrer" aria-label="Get it on Google Play">
+          <svg viewBox="0 0 135 40" width="135" height="40" xmlns="http://www.w3.org/2000/svg">
+            <rect width="135" height="40" rx="6" fill="#000"/>
+            <text x="67" y="14" text-anchor="middle" fill="#fff" font-size="7" font-family="system-ui, sans-serif">GET IT ON</text>
+            <text x="67" y="28" text-anchor="middle" fill="#fff" font-size="12" font-weight="600" font-family="system-ui, sans-serif">Google Play</text>
+          </svg>
+        </a>
+      </div>
+      <p class="coming-soon-note">App store listings coming soon. Use the web app at <a href="https://app.mypropair.com">app.mypropair.com</a></p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="logo">Pro<span>Pair</span></a>
+        <p>The B2B Home Services Marketplace</p>
+      </div>
+      <div class="footer-links">
+        <div>
+          <h4>Product</h4>
+          <a href="#how-it-works">How It Works</a>
+          <a href="#features">Features</a>
+          <a href="#for-who">Who It's For</a>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <a href="/privacy">Privacy Policy</a>
+          <a href="/terms">Terms of Service</a>
+        </div>
+        <div>
+          <h4>Connect</h4>
+          <a href="mailto:hello@mypropair.com">hello@mypropair.com</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 ProPair. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+</Layout>
+
+<style>
+  /* Nav */
+  .nav { background: white; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .logo { font-size: 1.5rem; font-weight: 800; color: var(--brand); }
+  .logo span { color: var(--accent); }
+  .nav-links { display: flex; align-items: center; gap: 24px; font-size: 0.95rem; }
+  .nav-links a { color: var(--text-muted); transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+
+  /* Buttons */
+  .btn { display: inline-block; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; cursor: pointer; }
+  .btn-primary { background: var(--brand); color: white; }
+  .btn-primary:hover { background: var(--brand-light); }
+  .btn-outline { border: 2px solid var(--brand); color: var(--brand); }
+  .btn-outline:hover { background: var(--brand); color: white; }
+  .btn-ghost { color: white; border: 2px solid rgba(255,255,255,0.4); }
+  .btn-ghost:hover { border-color: white; background: rgba(255,255,255,0.1); }
+  .btn-lg { padding: 14px 28px; font-size: 1.1rem; }
+  .btn-full { width: 100%; text-align: center; margin-top: 16px; }
+
+  /* Hero */
+  .hero { background: linear-gradient(135deg, var(--brand) 0%, #7c3aed 100%); color: white; padding: 100px 0 120px; text-align: center; }
+  .badge { display: inline-block; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; margin-bottom: 24px; }
+  .hero h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 800; margin-bottom: 20px; line-height: 1.2; }
+  .hero-sub { font-size: 1.2rem; opacity: 0.9; max-width: 620px; margin: 0 auto 36px; }
+  .hero-cta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .hero-note { margin-top: 16px; font-size: 0.85rem; opacity: 0.7; }
+
+  /* Social Proof */
+  .social-proof { padding: 40px 0; background: white; border-bottom: 1px solid #e2e8f0; }
+  .stats { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; }
+  .stat { text-align: center; }
+  .stat-num { display: block; font-size: 2rem; font-weight: 800; color: var(--brand); }
+  .stat-label { font-size: 0.85rem; color: var(--text-muted); }
+
+  /* Sections */
+  .section { padding: 80px 0; }
+  .section-alt { background: white; }
+  .section-title { font-size: 2rem; font-weight: 800; text-align: center; margin-bottom: 12px; }
+  .section-sub { text-align: center; color: var(--text-muted); max-width: 500px; margin: 0 auto 48px; }
+
+  /* Two Tier */
+  .two-tier { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 800px; margin: 0 auto; }
+  .tier-card { background: white; border: 2px solid #e2e8f0; border-radius: var(--radius); padding: 32px; }
+  .tier-card.featured { border-color: var(--brand); box-shadow: 0 4px 24px rgba(37,99,235,0.15); }
+  .tier-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 12px; }
+  .tier-badge.free { background: #f0fdf4; color: #16a34a; }
+  .tier-badge.pro { background: #eff6ff; color: var(--brand); }
+  .tier-card h3 { font-size: 1.3rem; margin-bottom: 8px; }
+  .tier-card p { color: var(--text-muted); margin-bottom: 16px; font-size: 0.95rem; }
+  .tier-card ul { list-style: none; margin-bottom: 8px; }
+  .tier-card li { padding: 6px 0; font-size: 0.9rem; }
+
+  /* Features */
+  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  .feature { text-align: center; padding: 24px; }
+  .feature-icon { font-size: 2.5rem; margin-bottom: 12px; }
+  .feature h3 { margin-bottom: 8px; }
+  .feature p { color: var(--text-muted); font-size: 0.9rem; }
+
+  /* Audience */
+  .audience-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .audience-card { background: white; border: 1px solid #e2e8f0; border-radius: var(--radius); padding: 32px; }
+  .audience-card h3 { font-size: 1.3rem; margin-bottom: 12px; }
+  .audience-card p { color: var(--text-muted); margin-bottom: 16px; }
+  .audience-card ul { list-style: none; }
+  .audience-card li { padding: 4px 0; font-size: 0.9rem; }
+  .audience-card li::before { content: '→ '; color: var(--brand-light); }
+
+  /* CTA / App Badges */
+  .app-badges-section { background: var(--bg); }
+  .app-badges { display: flex; gap: 16px; justify-content: center; align-items: center; flex-wrap: wrap; }
+  .app-badge { display: inline-block; transition: opacity 0.2s; }
+  .app-badge:hover { opacity: 0.8; }
+  .coming-soon-note { font-size: 0.8rem; color: var(--text-muted); margin-top: 12px; }
+  .coming-soon-note a { color: var(--brand-light); text-decoration: underline; }
+
+  /* Footer */
+  .footer { background: var(--text); color: #94a3b8; padding: 48px 0 24px; }
+  .footer-inner { display: grid; grid-template-columns: 1fr 2fr; gap: 48px; }
+  .footer-brand .logo { color: white; }
+  .footer-brand p { margin-top: 8px; font-size: 0.85rem; }
+  .footer-links { display: flex; gap: 48px; }
+  .footer-links h4 { color: white; margin-bottom: 12px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .footer-links a { display: block; padding: 4px 0; font-size: 0.85rem; transition: color 0.2s; }
+  .footer-links a:hover { color: white; }
+  .footer-bottom { grid-column: 1 / -1; border-top: 1px solid #334155; padding-top: 24px; margin-top: 24px; font-size: 0.8rem; }
+
+  /* Hamburger (hidden on desktop) */
+  .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 8px; flex-direction: column; gap: 5px; }
+  .hamburger-line { display: block; width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: transform 0.3s, opacity 0.3s; }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .hamburger { display: flex; }
+    .nav-links { display: none; flex-direction: column; position: absolute; top: 64px; left: 0; right: 0; background: white; padding: 16px 24px; border-bottom: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,0.08); gap: 12px; z-index: 99; }
+    .nav-links.open { display: flex; }
+    .nav-links a { display: block; }
+    .nav-inner { position: relative; }
+    .two-tier, .features-grid, .audience-grid { grid-template-columns: 1fr; }
+    .footer-inner { grid-template-columns: 1fr; }
+    .footer-links { flex-direction: column; gap: 24px; }
+    .stats { gap: 24px; }
+  }
+</style>
+
+<script>
+  const toggle = document.getElementById('menu-toggle');
+  const navLinks = document.getElementById('nav-links');
+
+  if (toggle && navLinks) {
+    toggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    // Close menu when a nav link is clicked
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+</script>
